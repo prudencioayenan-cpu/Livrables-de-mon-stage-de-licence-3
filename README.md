@@ -1,12 +1,9 @@
 # Livrables de mon stage de licence 3 de Génie Bio-Informatique à la plateforme IMAGEUP de l'université de Poitiers (Mai à Juillet 2026)
-Stage portant sur la mise en place d’un logiciel dédié à l’analyse d’images issues de la microscopie haute résolution STORM et développement d’un script de colocalisation de protéines.
+Stage portant sur la mise en place d’un logiciel dédié à l’analyse d’images issues de la microscopie haute résolution STORM.
 
 ## Projet 1 — Analyse de colocalisation STORM par triangulation de Delaunay
 
-L'objectif ici est de déterminer s'il existe une trame structurelle commune qui va
-au-delà du simple marquage de deux protéines, c'est-à-dire de quantifier si deux
-populations de molécules détectées par microscopie STORM (canaux W1 et W2) occupent
-des positions spatialement proches, ce qui peut indiquer une interaction fonctionnelle.
+L'objectif ici est de déterminer s'il existe une trame structurelle commune qui va au-delà du simple marquage de deux protéines, c'est-à-dire de quantifier si deuxpopulations de molécules détectées par microscopie STORM (canaux W1 et W2) occupent des positions spatialement proches, ce qui peut indiquer une interaction fonctionnelle.
 
 L'application fonctionne avec deux modes d'entrée : soit deux fichiers CSV de
 localisations (un par canal, avec coordonnées x/y en nanomètres), soit une image TIF
@@ -27,11 +24,11 @@ en programmation, avec un guide d'utilisation fourni.
 
 ## Projet 2 - Image Art
 
-Application web locale permettant d'appliquer des effets artistiques (vitrail et mosaïque) à des images de microscopie, développée dans le cadre d'un stage à la plateforme **ImageUP** (Université de Poitiers).
+Application web locale permettant d'appliquer des effets artistiques (vitrail et mosaïque) à des images de microscopie, développée dans le cadre de mon stage de licence 3 à la plateforme **ImageUP** (Université de Poitiers).
 
 ### Contexte
 
-Plusieurs étudiants de M1 ont développé des macros ImageJ/Fiji produisant des effets visuels de type "vitrail" à partir d'images de microscopie. Ces macros étaient fonctionnelles mais nécessitaient de connaître ImageJ pour être utilisées. L'objectif de ce projet est de rendre ces traitements accessibles via une interface web simple, sans dépendance à Fiji, afin que n'importe quel membre de la plateforme puisse générer ces rendus en quelques clics.
+Plusieurs étudiants de M1 GPHY ont développé des macros ImageJ/Fiji produisant des effets visuels de type "vitrail" à partir d'images de microscopie. Ces macros étaient fonctionnelles mais nécessitaient de connaître ImageJ pour être utilisées. L'objectif de ce projet est de rendre ces traitements accessibles via une interface web simple (sans dépendance à Fiji),hébergée sur le site de la plateforme, afin que n'importe quel membre de la plateforme ou visiteur du site web puisse générer ces rendus en quelques clics.
 
 ### Fonctionnalités
 
@@ -49,7 +46,7 @@ Plusieurs étudiants de M1 ont développé des macros ImageJ/Fiji produisant des
 
 **Mosaïque** : découpage de l'image en carreaux carrés, chaque carreau prenant la couleur du pixel central avec un boost de brillance ajustable (rendu pixel art).
 
-D'autres versions de l'effet vitrail, portées depuis les macros originales de plusieurs étudiants M1 (Dorian Esserteau, Kévin Pérès, Samuel Maillé, Rachel Head), ont été développées et testées au cours du stage mais ne sont pas activées dans la version retenue par la plateforme.
+D'autres versions de l'effet vitrail, portées depuis les macros originales de plusieurs étudiants M1 ont été développées et testées au cours du stage mais ne sont pas activées dans la version retenue par la plateforme.
 
 ### Architecture technique
 
@@ -101,7 +98,7 @@ vitrail_app/
 
 1. Lancer `Image_Art.py`
 2. Ouvrir `http://127.0.0.1:5000` dans un navigateur
-3. Sélectionner une image dans la galerie
+3. Sélectionner une image dans la galerie affichée dans l'interface
 4. Choisir un effet (vitrail ou mosaïque)
 5. Ajuster les paramètres souhaités
 6. Lancer le traitement
@@ -111,7 +108,7 @@ Pour ajouter ou retirer des images de la galerie, il suffit d'ajouter ou de supp
 
 ### Auteur
 
-Mohamed Ngom — stage à la plateforme ImageUP, Université de Poitiers.
+Prudencio AYENAN — stagiaire en Bio-Informatique, à la plateforme ImageUP, Université de Poitiers, 2025-2026
 
 ### Remerciements
 
