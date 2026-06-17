@@ -22,7 +22,7 @@ en programmation, avec un guide d'utilisation fourni.
 
 **Stack** : Python, tkinter, scipy (Delaunay, cKDTree), matplotlib, plotly
 
-## Projet 2 - Image Art
+## Projet 2 — Image Art
 
 Application web locale permettant d'appliquer des effets artistiques (vitrail et mosaïque) à des images de microscopie, développée dans le cadre de mon stage de licence 3 à la plateforme **ImageUP** (Université de Poitiers).
 
