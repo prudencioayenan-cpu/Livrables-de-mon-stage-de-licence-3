@@ -28,7 +28,7 @@ Application web locale permettant d'appliquer des effets artistiques (vitrail et
 
 ### Contexte
 
-Plusieurs étudiants de M1 GPHY ont développé des macros ImageJ/Fiji produisant des effets visuels de type "vitrail" à partir d'images de microscopie. Ces macros étaient fonctionnelles mais nécessitaient de connaître ImageJ pour être utilisées. L'objectif de ce projet est de rendre ces traitements accessibles via une interface web simple (sans dépendance à Fiji),hébergée sur le site de la plateforme, afin que n'importe quel membre de la plateforme ou visiteur du site web puisse générer ces rendus en quelques clics.
+Plusieurs étudiants de M1 GPHY ont développé des macros ImageJ/Fiji produisant des effets visuels de type "vitrail" à partir d'images de microscopie. Ces macros étaient fonctionnelles mais nécessitaient de connaître ImageJ pour être utilisées. L'objectif de ce projet est de rendre ces traitements accessibles via une interface web simple (sans dépendance à Fiji), qui sera hébergée sur le site de la plateforme, afin que n'importe quel membre de la plateforme ou visiteur du site web puisse générer ces rendus en quelques clics.
 
 ### Fonctionnalités
 
