@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ImageArt — IMAGEUP - Université de Poitiers</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c23;
+    --border: #252a35;
+    --accent: #4fffb0;
+    --accent2: #7b61ff;
+    --accent3: #ff6b6b;
+    --text: #e8eaf0;
+    --muted: #5a6070;
+    --card-hover: #1e2330;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,255,176,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,255,176,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+
+  .badge {
+    font-size: 0.65rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+  }
+
+  .steps {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 48px;
+    align-items: center;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+  .step.active { color: var(--accent); }
+  .step.done { color: var(--text); }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+  }
+  .step.active .step-num { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .step-sep { flex: 1; height: 1px; background: var(--border); max-width: 60px; }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  #galerie {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+
+  .img-card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--surface);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    aspect-ratio: 1;
+  }
+  .img-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,255,176,0.1); }
+  .img-card.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent), 0 8px 30px rgba(79,255,176,0.15); }
+  .img-card img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.85); transition: filter 0.2s; }
+  .img-card:hover img, .img-card.selected img { filter: brightness(1); }
+  .img-card .img-name {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 20px 10px 8px;
+    font-size: 0.65rem; color: #ccc;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .img-card .check {
+    position: absolute; top: 8px; right: 8px;
+    width: 20px; height: 20px;
+    background: var(--accent); border-radius: 50%;
+    display: none; align-items: center; justify-content: center;
+  }
+  .img-card.selected .check { display: flex; }
+  .check svg { width: 10px; height: 10px; }
+
+  .upload-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: dashed;
+    background: transparent;
+  }
+  .upload-card:hover { background: rgba(79,255,176,0.04); }
+  .upload-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 0.65rem;
+    text-align: center;
+    line-height: 1.5;
+    transition: color 0.2s;
+  }
+  .upload-card:hover .upload-icon { color: var(--accent); }
+
+  #programmes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+
+  .prog-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    cursor: pointer;
+    background: var(--surface);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .prog-card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; }
+  .prog-card.vitrail::before { background: radial-gradient(circle at top left, rgba(79,255,176,0.06), transparent 60%); }
+  .prog-card.mosaique::before { background: radial-gradient(circle at top left, rgba(123,97,255,0.06), transparent 60%); }
+  .prog-card:hover, .prog-card.selected { border-color: var(--accent2); }
+  .prog-card.selected { box-shadow: 0 0 0 2px var(--accent2); }
+  .prog-card:hover::before, .prog-card.selected::before { opacity: 1; }
+
+  .prog-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+  .prog-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+  .prog-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.6; }
+
+  #parametres { max-width: 560px; margin-bottom: 48px; }
+  .param-group { margin-bottom: 28px; }
+  .param-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 10px; font-size: 0.75rem; color: var(--text);
+  }
+  .param-value { font-size: 0.9rem; color: var(--accent); font-weight: 500; min-width: 36px; text-align: right; }
+
+  input[type=range] { width: 100%; -webkit-appearance: none; height: 2px; background: var(--border); border-radius: 2px; outline: none; }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); cursor: pointer;
+    box-shadow: 0 0 0 3px rgba(79,255,176,0.15); transition: box-shadow 0.2s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 6px rgba(79,255,176,0.2); }
+
+  select.param-select {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.75rem;
+    outline: none;
+    cursor: pointer;
+  }
+  select.param-select:focus { border-color: var(--accent); }
+
+  #btn-lancer {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 36px; background: var(--accent); color: var(--bg);
+    border: none; border-radius: 6px; font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    letter-spacing: 0.05em; transition: all 0.2s;
+  }
+  #btn-lancer:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+  #btn-lancer:not(:disabled):hover { background: #6fffbe; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(79,255,176,0.25); }
+
+  #btn-telecharger {
+    display: none; align-items: center; gap: 10px;
+    padding: 14px 36px; background: transparent; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 6px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s;
+    margin-top: 16px; text-decoration: none;
+  }
+  #btn-telecharger:hover { background: rgba(79,255,176,0.08); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(79,255,176,0.15); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  #toast {
+    position: fixed; bottom: 32px; right: 32px;
+    padding: 14px 22px; border-radius: 8px; font-size: 0.8rem;
+    z-index: 1000; transform: translateY(80px); opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); max-width: 360px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.ok { background: #0d2b1f; border: 1px solid var(--accent); color: var(--accent); }
+  #toast.err { background: #2b0d0d; border: 1px solid var(--accent3); color: var(--accent3); }
+
+  .section-block { transition: opacity 0.3s; }
+  .section-block.disabled { opacity: 0.3; pointer-events: none; }
+
+  #resume {
+    display: none; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 32px;
+    font-size: 0.72rem; color: var(--muted); line-height: 1.8;
+  }
+  #resume.visible { display: block; }
+  #resume strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Image<span>Art</span></div>
+  <span class="badge">Plateforme IMAGEUP — Université de Poitiers</span>
+</header>
+
+<main>
+
+  <div class="steps">
+    <div class="step active" id="step1"><div class="step-num">1</div> Choisir une image</div>
+    <div class="step-sep"></div>
+    <div class="step" id="step2"><div class="step-num">2</div> Programme</div>
+    <div class="step-sep"></div>
+    <div class="step" id="step3"><div class="step-num">3</div> Paramètres</div>
+    <div class="step-sep"></div>
+    <div class="step" id="step4"><div class="step-num">4</div> Lancer</div>
+  </div>
+
+  <!-- 1. Galerie -->
+  <div class="section-block" id="bloc-galerie">
+    <p class="section-label">// 01 — Sélectionner une image</p>
+    <div id="galerie">
+      <div class="img-card upload-card" onclick="document.getElementById('input-upload').click()">
+        <div class="upload-icon">
+          <svg width="28" height="28" viewBox="0 0 16 16" fill="none">
+            <path d="M8 2v8M5 7l3 3 3-3M2 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Téléverser<br>une image</span>
+        </div>
+      </div>
+      <input type="file" id="input-upload" accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp,.gif,.webp" style="display:none" onchange="televerserImage(event)">
+      {% for img in images %}
+      <div class="img-card" onclick="selectImage('{{ img }}', false)" data-name="{{ img }}">
+        <img src="/images/{{ img }}" alt="{{ img }}" loading="lazy">
+        <div class="img-name">{{ img }}</div>
+        <div class="check">
+          <svg viewBox="0 0 10 8" fill="none">
+            <path d="M1 4l2.5 2.5L9 1" stroke="#0a0c10" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 2. Programmes -->
+  <div class="section-block disabled" id="bloc-programmes">
+    <p class="section-label">// 02 — Choisir un programme</p>
+    <div id="programmes">
+      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v1')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — 1</div>
+        <div class="prog-desc">Flou gaussien + quantification couleurs + détection de contours.</div>
+      </div>
+      <!--<div class="prog-card vitrail" onclick="selectProgramme('vitrail_v2')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — Dorian Esserteau</div>
+        <div class="prog-desc">Segmentation en zones + couleur moyenne par zone. Rendu plus "vrai vitrail".</div>
+      </div>-->
+      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v3')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — 2</div>
+        <div class="prog-desc">Segmentation avancée + boost saturation HSV + choix de teinte.</div>
+      </div>
+      <!--<div class="prog-card vitrail" onclick="selectProgramme('vitrail_v4')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — Kévin Pérès</div>
+        <div class="prog-desc">Deux styles (explosion de couleurs / vitrail classique) + choix de palette.</div>
+      </div>
+      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v5')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — Cléo Thury v2</div>
+        <div class="prog-desc">Version améliorée : vraie segmentation par zones + couleur moyenne + plomb.</div>
+      </div>
+      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v6')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — Samuel Maillé</div>
+        <div class="prog-desc">Lissage médian "verre fondu" + quantification couleurs + joints de plomb.</div>
+      </div>
+      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v7')">
+        <span class="prog-icon">🪟</span>
+        <div class="prog-title">Vitrail — Rachel HEAD</div>
+        <div class="prog-desc">Lissage médian + contours squelettisés + fusion par superposition.</div>
+      </div>-->
+      <div class="prog-card mosaique" onclick="selectProgramme('mosaique')">
+        <span class="prog-icon">🔲</span>
+        <div class="prog-title">Mosaïque</div>
+        <div class="prog-desc">Carrelage carré style pixel art. Chaque carreau prend la couleur du pixel central.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Paramètres -->
+  <div class="section-block disabled" id="bloc-params">
+    <p class="section-label">// 03 — Régler les paramètres</p>
+    <div id="parametres">
+
+      <!-- V1 Maël Zami -->
+      <div id="params-vitrail_v1" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Taille des pièces (rayon flou)</span><span class="param-value" id="val-radius">4</span></div>
+          <input type="range" id="radius" min="1" max="20" value="4" oninput="document.getElementById('val-radius').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Nombre de couleurs</span><span class="param-value" id="val-numColors">12</span></div>
+          <input type="range" id="numColors" min="2" max="32" value="12" oninput="document.getElementById('val-numColors').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Épaisseur du plomb (px)</span><span class="param-value" id="val-leadThick">2</span></div>
+          <input type="range" id="leadThick" min="1" max="10" value="2" oninput="document.getElementById('val-leadThick').textContent=this.value">
+        </div>
+      </div>
+
+      <!--  V2 Dorian Esserteau
+      <div id="params-vitrail_v2" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Nombre de pièces (1=beaucoup, 100=peu)</span><span class="param-value" id="val-prominence">30</span></div>
+          <input type="range" id="prominence" min="1" max="100" value="30" oninput="document.getElementById('val-prominence').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Niveau de détail (sigma)</span><span class="param-value" id="val-sigma">4</span></div>
+          <input type="range" id="sigma" min="1" max="10" value="4" oninput="document.getElementById('val-sigma').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Épaisseur du plomb (px)</span><span class="param-value" id="val-leadThick2">2</span></div>
+          <input type="range" id="leadThick2" min="1" max="10" value="2" oninput="document.getElementById('val-leadThick2').textContent=this.value">
+        </div>
+      </div> -->
+
+      <!-- V3 Cléo Thury -->
+      <div id="params-vitrail_v3" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Sensibilité (basse=beaucoup de zones)</span><span class="param-value" id="val-sensibilite">50</span></div>
+          <input type="range" id="sensibilite" min="1" max="100" value="50" oninput="document.getElementById('val-sensibilite').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Précision des contours</span><span class="param-value" id="val-precision">3</span></div>
+          <input type="range" id="precision" min="1" max="20" value="3" oninput="document.getElementById('val-precision').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Intensité couleurs</span><span class="param-value" id="val-intensite">1.0</span></div>
+          <input type="range" id="intensite" min="1" max="50" value="10" oninput="document.getElementById('val-intensite').textContent=(this.value/10).toFixed(1)">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Style de teinte</span></div>
+          <select id="teinte" class="param-select">
+            <option value="Image originale">Image originale</option>
+            <option value="Niveaux de gris">Niveaux de gris</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- V4 Kévin Pérès 
+      <div id="params-vitrail_v4" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Style de rendu</span></div>
+          <select id="style_kevin" class="param-select">
+            <option value="Explosion de couleurs">Explosion de couleurs (sans plomb)</option>
+            <option value="Vitrail classique">Vitrail classique (avec plomb)</option>
+          </select>
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Lissage (rayon)</span><span class="param-value" id="val-rayon">5</span></div>
+          <input type="range" id="rayon" min="1" max="20" value="5" oninput="document.getElementById('val-rayon').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Palette de couleurs</span></div>
+          <select id="palette" class="param-select">
+            <option value="Couleurs d'origine">Couleurs d'origine</option>
+            <option value="Arc-en-ciel">Arc-en-ciel (Spectrum)</option>
+            <option value="Feu">Feu (Fire)</option>
+            <option value="Glace">Glace (Ice)</option>
+            <option value="Nuit">Nuit (Royal)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- V5 Cléo Thury v2 
+      <div id="params-vitrail_v5" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Sensibilité de découpage</span><span class="param-value" id="val-sensibilite5">30</span></div>
+          <input type="range" id="sensibilite5" min="1" max="99" value="30" oninput="document.getElementById('val-sensibilite5').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Précision des contours</span><span class="param-value" id="val-precision5">4</span></div>
+          <input type="range" id="precision5" min="1" max="20" value="4" oninput="document.getElementById('val-precision5').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Intensité couleurs</span><span class="param-value" id="val-intensite5">1.0</span></div>
+          <input type="range" id="intensite5" min="1" max="50" value="10" oninput="document.getElementById('val-intensite5').textContent=(this.value/10).toFixed(1)">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Style de teinte</span></div>
+          <select id="teinte5" class="param-select">
+            <option value="Image originale">Image originale</option>
+            <option value="Niveaux de gris">Niveaux de gris</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- V6 Samuel Maillé
+      <div id="params-vitrail_v6" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Tolérance au bruit (nombre de pièces)</span><span class="param-value" id="val-tolerance">30</span></div>
+          <input type="range" id="tolerance" min="1" max="99" value="30" oninput="document.getElementById('val-tolerance').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Nombre de couleurs</span><span class="param-value" id="val-nColors">8</span></div>
+          <input type="range" id="nColors" min="2" max="32" value="8" oninput="document.getElementById('val-nColors').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Épaisseur des joints de plomb (px)</span><span class="param-value" id="val-jointThickness">2</span></div>
+          <input type="range" id="jointThickness" min="1" max="10" value="2" oninput="document.getElementById('val-jointThickness').textContent=this.value">
+        </div>
+      </div>
+
+      <!-- V7 Rachel HEAD 
+      <div id="params-vitrail_v7" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Épaisseur des contours (px)</span><span class="param-value" id="val-epaisseur">2</span></div>
+          <input type="range" id="epaisseur" min="1" max="10" value="2" oninput="document.getElementById('val-epaisseur').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Nombre de couleurs</span><span class="param-value" id="val-nbcoul">5</span></div>
+          <input type="range" id="nbcoul" min="2" max="50" value="5" oninput="document.getElementById('val-nbcoul').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Poids du lissage (filtre médian)</span><span class="param-value" id="val-lissage">2</span></div>
+          <input type="range" id="lissage" min="1" max="10" value="2" oninput="document.getElementById('val-lissage').textContent=this.value">
+        </div>
+      </div>-->
+
+      <!-- Mosaïque -->
+      <div id="params-mosaique" style="display:none">
+        <div class="param-group">
+          <div class="param-label"><span>Taille des carreaux (px)</span><span class="param-value" id="val-dim">20</span></div>
+          <input type="range" id="dim" min="5" max="50" value="20" oninput="document.getElementById('val-dim').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Épaisseur du bord (px)</span><span class="param-value" id="val-bord">2</span></div>
+          <input type="range" id="bord" min="1" max="20" value="2" oninput="document.getElementById('val-bord').textContent=this.value">
+        </div>
+        <div class="param-group">
+          <div class="param-label"><span>Boost brillance</span><span class="param-value" id="val-brill">1.5</span></div>
+          <input type="range" id="brill" min="5" max="50" value="15" oninput="document.getElementById('val-brill').textContent=(this.value/10).toFixed(1)">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. Résumé + Lancer -->
+  <div class="section-block disabled" id="bloc-lancer">
+    <p class="section-label">// 04 — Lancer</p>
+    <div id="resume">
+      Image : <strong id="r-image">—</strong> &nbsp;|&nbsp;
+      Programme : <strong id="r-prog">—</strong>
+    </div>
+    <button id="btn-lancer" onclick="lancer()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M4 2l10 6-10 6V2z" fill="currentColor"/>
+      </svg>
+      Lancer
+    </button>
+    <a id="btn-telecharger" href="#" onclick="televerserResultat(); return false;" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Télécharger le résultat (.tif)
+    </a>
+    <img id="img-resultat" src="" alt="Résultat" style="display:none; max-width:100%; border-radius:8px; border:1px solid var(--border); margin-top:24px;">
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+  let selectedImage = null;
+  let selectedProg  = null;
+  let selectedEstUpload = false;
+
+  function selectImage(name, estUpload) {
+    if (selectedImage === name) {
+      selectedImage = null;
+      document.querySelector(`.img-card[data-name="${name}"]`).classList.remove('selected');
+      document.getElementById('step1').classList.remove('done');
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('bloc-programmes').classList.add('disabled');
+      checkReady();
+      return;
+    }
+    selectedImage = name;
+    selectedEstUpload = !!estUpload;
+    document.querySelectorAll('.img-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`.img-card[data-name="${name}"]`).classList.add('selected');
+    document.getElementById('step1').classList.add('done');
+    document.getElementById('step2').classList.add('active');
+    document.getElementById('bloc-programmes').classList.remove('disabled');
+    updateResume();
+    checkReady();
+  }
+
+  async function televerserImage(event) {
+    const fichier = event.target.files[0];
+    if (!fichier) return;
+
+    const formData = new FormData();
+    formData.append('fichier', fichier);
+
+    try {
+      const resp = await fetch('/upload', { method: 'POST', body: formData });
+      const data = await resp.json();
+
+      if (!data.ok) {
+        showToast(false, data.erreur);
+        event.target.value = '';
+        return;
+      }
+
+      // Crée dynamiquement la vignette de l'image téléversée
+      const galerie = document.getElementById('galerie');
+      const carte = document.createElement('div');
+      carte.className = 'img-card';
+      carte.setAttribute('data-name', data.nom);
+      carte.setAttribute('onclick', `selectImage('${data.nom}', true)`);
+      carte.innerHTML = `
+        <img src="/uploads_temp/${data.nom}" alt="${data.nom_original}" loading="lazy">
+        <div class="img-name">${data.nom_original}</div>
+        <div class="check">
+          <svg viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#0a0c10" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>`;
+      galerie.appendChild(carte);
+
+      // Sélectionne automatiquement l'image qu'on vient de téléverser
+      selectImage(data.nom, true);
+      showToast(true, "Image téléversée avec succès !");
+
+    } catch (e) {
+      showToast(false, "Erreur lors du téléversement : " + e.message);
+    }
+    event.target.value = '';
+  }
+
+  function selectProgramme(prog) {
+    selectedProg = prog;
+    document.querySelectorAll('.prog-card').forEach(c => c.classList.remove('selected'));
+    // Sélectionne la bonne carte
+    document.querySelectorAll('.prog-card').forEach(c => {
+      if (c.getAttribute('onclick') === `selectProgramme('${prog}')`) c.classList.add('selected');
+    });
+    // Cache tous les blocs paramètres
+    ['vitrail_v1','vitrail_v3','mosaique'].forEach(v => {
+      const el = document.getElementById('params-' + v);
+      if (el) el.style.display = 'none';
+    });
+    // Affiche le bon bloc
+    const bloc = document.getElementById('params-' + prog);
+    if (bloc) bloc.style.display = 'block';
+
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step3').classList.add('active');
+    document.getElementById('bloc-params').classList.remove('disabled');
+    document.getElementById('step3').classList.add('done');
+    document.getElementById('step4').classList.add('active');
+    document.getElementById('bloc-lancer').classList.remove('disabled');
+    updateResume();
+    checkReady();
+  }
+
+  function updateResume() {
+    const r = document.getElementById('resume');
+    if (selectedImage && selectedProg) {
+      r.classList.add('visible');
+      document.getElementById('r-image').textContent = selectedImage;
+      document.getElementById('r-prog').textContent  = selectedProg;
+    }
+  }
+
+  function checkReady() {
+    document.getElementById('btn-lancer').disabled = !(selectedImage && selectedProg);
+  }
+
+  function getParams() {
+    if (selectedProg === 'vitrail_v1') {
+      return {
+        radius:    parseInt(document.getElementById('radius').value),
+        numColors: parseInt(document.getElementById('numColors').value),
+        leadThick: parseInt(document.getElementById('leadThick').value),
+      };
+    } else if (selectedProg === 'vitrail_v3') {
+      return {
+        sensibilite: parseInt(document.getElementById('sensibilite').value),
+        precision:   parseInt(document.getElementById('precision').value),
+        intensite:   parseFloat(document.getElementById('intensite').value) / 10,
+        teinte:      document.getElementById('teinte').value,
+      };
+    } else {
+      return {
+        dim:   parseInt(document.getElementById('dim').value),
+        bord:  parseInt(document.getElementById('bord').value),
+        brill: parseFloat(document.getElementById('brill').value) / 10,
+      };
+    }
+  }
+
+  let dernierTifB64 = null;
+  let dernierNomFichier = null;
+
+  async function lancer() {
+    const btn   = document.getElementById('btn-lancer');
+    const btnDl = document.getElementById('btn-telecharger');
+    const imgR  = document.getElementById('img-resultat');
+
+    btnDl.style.display = 'none';
+    imgR.style.display  = 'none';
+
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="20" stroke-dashoffset="0"><animateTransform attributeName="transform" type="rotate" from="0 7 7" to="360 7 7" dur="0.8s" repeatCount="indefinite"/></circle></svg> Traitement en cours…';
+
+    try {
+      const resp = await fetch('/lancer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: selectedImage, programme: selectedProg, params: getParams(), estUpload: selectedEstUpload })
+      });
+      const data = await resp.json();
+      showToast(data.ok, data.ok ? data.message : data.erreur);
+
+      if (data.ok && data.apercu) {
+        imgR.src = 'data:image/jpeg;base64,' + data.apercu;
+        imgR.style.display = 'block';
+        dernierTifB64    = data.tif_b64;
+        dernierNomFichier = data.fichier;
+        btnDl.style.display = 'inline-flex';
+        setTimeout(() => imgR.scrollIntoView({ behavior: 'smooth' }), 100);
+      }
+    } catch(e) {
+      showToast(false, "Erreur réseau : " + e.message);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2l10 6-10 6V2z" fill="currentColor"/></svg> Lancer';
+  }
+
+  async function televerserResultat() {
+    if (!dernierTifB64) return;
+    const resp = await fetch('/telecharger', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tif_b64: dernierTifB64, fichier: dernierNomFichier })
+    });
+    const blob = await resp.blob();
+    const url  = window.URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = dernierNomFichier;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
+  function showToast(ok, msg) {
+    const t = document.getElementById('toast');
+    t.className = ok ? 'ok' : 'err';
+    t.textContent = (ok ? '✓ ' : '✗ ') + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  checkReady();
+</script>
+</body>
+</html>
