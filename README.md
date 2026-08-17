@@ -3,11 +3,10 @@ Stage portant sur la mise en place d’un logiciel dédié à l’analyse d’im
 
 ## Projet 1 — Analyse de colocalisation STORM par triangulation de Delaunay
 
-L'objectif ici est de déterminer s'il existe une trame structurelle commune qui va au-delà du simple marquage de deux protéines, c'est-à-dire de quantifier si deuxpopulations de molécules détectées par microscopie STORM (canaux W1 et W2) occupent des positions spatialement proches, ce qui peut indiquer une interaction fonctionnelle.
+L'objectif ici est de déterminer s'il existe une trame structurelle commune qui va au-delà du simple marquage de deux protéines, c'est-à-dire de quantifier si deux populations de molécules détectées par microscopie STORM (canaux W1 et W2) occupent des positions spatialement proches, ce qui peut indiquer une interaction fonctionnelle, voir une colocalisation entre ces protéines.
 
-L'application fonctionne avec deux modes d'entrée : soit deux fichiers CSV de
-localisations (un par canal, avec coordonnées x/y en nanomètres), soit une image TIF
-STORM bicolore dont les canaux sont extraits automatiquement par seuillage.
+L'application fonctionne avec un mode d'entrée : deux fichiers CSV de
+localisations (un par canal, avec coordonnées x/y en nanomètres).
 
 Pour chaque canal, une triangulation de Delaunay est calculée afin de reconstruire le
 réseau structurel sous-jacent (pertinent notamment pour des organites comme le
@@ -17,18 +16,20 @@ de colocalisation (W1, W2, score global), une distance moyenne entre paires
 colocalisées, ainsi qu'un graphe interactif de sensibilité montrant l'évolution des
 scores selon le rayon choisi.
 
-L'interface graphique (tkinter) a été conçue pour être utilisable sans connaissances
+L'interface graphique a été conçue avec *tkinter* pour être utilisable sans connaissances
 en programmation, avec un guide d'utilisation fourni.
 
-**Stack** : Python, tkinter, scipy (Delaunay, cKDTree), matplotlib, plotly
+**Bibliothèque de code** : Python, tkinter, scipy (Delaunay, cKDTree), matplotlib, plotly
 
 ## Projet 2 — Image Art
 
-Application web locale permettant d'appliquer des effets artistiques (vitrail et mosaïque) à des images de microscopie, développée dans le cadre de mon stage de licence 3 à la plateforme **ImageUP** (Université de Poitiers).
+Application web locale permettant d'appliquer des effets artistiques (vitrail et mosaïque) à des images de microscopie, développée dans le cadre de mon stage de licence 3 à la plateforme **ImageUP** (Université de Poitiers), pour un projet artistique (Arts et Sciences).
 
 ### Contexte
 
-Plusieurs étudiants de M1 GPHY ont développé des macros ImageJ/Fiji produisant des effets visuels de type "vitrail" à partir d'images de microscopie. Ces macros étaient fonctionnelles mais nécessitaient de connaître ImageJ pour être utilisées. L'objectif de ce projet est de rendre ces traitements accessibles via une interface web simple (sans dépendance à Fiji), qui sera hébergée sur le site de la plateforme, afin que n'importe quel membre de la plateforme ou visiteur du site web puisse générer ces rendus en quelques clics.
+Sur demande par ma maitre de stage au cours de l'année scolaire, plusieurs étudiants de master 1 de ma formation (GPHY : Génie Physiologique Biotechnologique et Informatique) ont développé des macros ImageJ/Fiji produisant des effets visuels de type "vitrail" à partir d'images de microscopie. Ces macros étaient fonctionnelles mais nécessitaient de connaître ImageJ pour être utilisées.
+
+L'objectif de ce projet est donc de rendre ces traitements accessibles via une interface web simple (sans dépendance à Fiji), qui sera éventuellement hébergée sur le site web de la plateforme, afin que n'importe quel membre de la plateforme ou visiteur du site web puisse générer ces rendus en quelques clics.
 
 ### Fonctionnalités
 
@@ -40,13 +41,13 @@ Plusieurs étudiants de M1 GPHY ont développé des macros ImageJ/Fiji produisan
 
 ### Effets disponibles
 
-**Vitrail — version Maël Zami** : flou gaussien, quantification des couleurs, détection et épaississement des contours (effet "plomb").
+**Vitrail 1** : flou gaussien, quantification des couleurs, détection et épaississement des contours (effet "plomb").
 
-**Vitrail — version Cléo Thury** : segmentation de l'image en zones homogènes (superpixels), couleur moyenne par zone, boost de saturation et choix de teinte.
+**Vitrail 2** : segmentation de l'image en zones homogènes (superpixels), couleur moyenne par zone, boost de saturation et choix de teinte.
 
 **Mosaïque** : découpage de l'image en carreaux carrés, chaque carreau prenant la couleur du pixel central avec un boost de brillance ajustable (rendu pixel art).
 
-D'autres versions de l'effet vitrail, portées depuis les macros originales de plusieurs étudiants M1 ont été développées et testées au cours du stage mais ne sont pas activées dans la version retenue par la plateforme.
+D'autres versions de l'effet vitrail, portées depuis les macros originales d'autres étudiants M1 ont été développées et testées au cours du stage mais ne sont pas activées dans la version retenue par la plateforme.
 
 ### Architecture technique
 
@@ -62,7 +63,7 @@ Dossier outputs/ — fichiers résultats au format TIFF
 
 L'application a initialement été conçue pour piloter Fiji en ligne de commande à partir des macros originales (ImageJ Macro Language), avant d'être entièrement portée en Python (Pillow, OpenCV, NumPy) afin de s'affranchir de la dépendance à Fiji et d'afficher le résultat directement dans l'interface.
 
-### Stack technique
+### Bibliothèque technique
 
 - **Python / Flask** — serveur web et logique de traitement
 - **Pillow** — lecture, conversion et quantification des couleurs
@@ -71,45 +72,27 @@ L'application a initialement été conçue pour piloter Fiji en ligne de command
 - **HTML / CSS / JavaScript** — interface utilisateur
 - **Jinja2** — génération dynamique de la galerie d'images
 
-### Installation
+### Installation et Utilisation
 
-```bash
-git clone <url-du-depot>
-cd vitrail_app
-pip install flask pillow opencv-contrib-python numpy
-python Image_Art.py
-```
+## >> 1- Télécharger d'abord Python version 3.14.5 : Python 3.14.5
 
-L'application est ensuite accessible à l'adresse `http://127.0.0.1:5000`.
+## 2- Installer les packages requis via le fichier ‘requirements.txt’
+	Pour installer les packages, se mettre dans le bon dossier dans le terminal windows(‘touche Win +R’ puis cmd ou bien taper directement ‘terminal’ dans la barre de recherche du pc), puis une fois dans le terminal taper la commande : pip install -r requirements.txt .
 
-### Structure du dépôt
+## >> 3- Lancer l'appli
+Une fois que Python et les packages sont installés, double cliquer sur le fichier ‘lancer_ImageArt’, qui est un .bat. Cela ouvre directement le serveur Flask et lance l'application dans le navigateur. Le serveur Flask s’ouvre d’abord via un terminal (puisque c’est lui qui fait tourner l’application, puis l’application elle s’ouvre par la suite quelques secondes d’attente après. 
 
-```
-vitrail_app/
-├── Image_Art.py          # serveur Flask et fonctions de traitement d'image
-├── images/                # images disponibles dans la galerie (à gérer manuellement)
-├── outputs/               # résultats générés, téléchargeables depuis l'interface
-├── macros/                # macros ImageJ originales, conservées à titre d'archive
-└── templates/
-    └── index.html          # interface utilisateur
-```
-
-### Utilisation
-
-1. Lancer `Image_Art.py`
-2. Ouvrir `http://127.0.0.1:5000` dans un navigateur
-3. Sélectionner une image dans la galerie affichée dans l'interface
-4. Choisir un effet (vitrail ou mosaïque)
-5. Ajuster les paramètres souhaités
-6. Lancer le traitement
-7. Télécharger le résultat
+## >> 4- Dès que vous le navigateur s'ouvre, vous verrez une page avec sécurisée qui vous avertit du fait que la page n'est pas sécurisée etc... Pas de panique c'est juste une mesure de sécurité (certificat auto signé en attendant d’avoir un vrai) https, appliquée sur à page html du logiciel. 
+	- Cliquez sur le bouton "Avancé"
+	- Puis tout en bas sur "Continuer vers 127.0.0.1:5000 (risqué)"
+Pas de panique ce n’est pas du tout riqué… C’est juste une formalité.
+Vous verrez s'afficher l'interface de l'application.
+Allez, c'est parti !
+Bonne analyse vitrail ou mosaique ou vitrail à vous.
 
 Pour ajouter ou retirer des images de la galerie, il suffit d'ajouter ou de supprimer les fichiers correspondants dans le dossier `images/`.
 
 ### Auteur
 
-Prudencio AYENAN — stagiaire en Bio-Informatique, à la plateforme ImageUP, Université de Poitiers, 2025-2026
+Prudencio AYENAN — stagiaire en Bio-Informatique, à la plateforme ImageUP, Université de Poitiers, Mai-Juillet 2026
 
-### Remerciements
-
-Les macros ImageJ originales ayant servi de base aux effets vitrail ont été développées par plusieurs étudiants de Master 1 de la plateforme ImageUP : Maël Zami, Cléo Thury, Dorian Esserteau, Kévin Pérès, Samuel Maillé et Rachel Head.
