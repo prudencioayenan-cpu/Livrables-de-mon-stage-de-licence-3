@@ -330,7 +330,7 @@
         <div class="prog-title">Vitrail — Dorian Esserteau</div>
         <div class="prog-desc">Segmentation en zones + couleur moyenne par zone. Rendu plus "vrai vitrail".</div>
       </div>-->
-      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v3')">
+      <div class="prog-card vitrail" onclick="selectProgramme('vitrail_v2')">
         <span class="prog-icon">🪟</span>
         <div class="prog-title">Vitrail — 2</div>
         <div class="prog-desc">Segmentation avancée + boost saturation HSV + choix de teinte.</div>
@@ -401,7 +401,7 @@
       </div> -->
 
       <!-- V3 Cléo Thury -->
-      <div id="params-vitrail_v3" style="display:none">
+      <div id="params-vitrail_v2" style="display:none">
         <div class="param-group">
           <div class="param-label"><span>Sensibilité (basse=beaucoup de zones)</span><span class="param-value" id="val-sensibilite">50</span></div>
           <input type="range" id="sensibilite" min="1" max="100" value="50" oninput="document.getElementById('val-sensibilite').textContent=this.value">
@@ -621,7 +621,7 @@
       if (c.getAttribute('onclick') === `selectProgramme('${prog}')`) c.classList.add('selected');
     });
     // Cache tous les blocs paramètres
-    ['vitrail_v1','vitrail_v3','mosaique'].forEach(v => {
+    ['vitrail_v1','vitrail_v2','mosaique'].forEach(v => {
       const el = document.getElementById('params-' + v);
       if (el) el.style.display = 'none';
     });
