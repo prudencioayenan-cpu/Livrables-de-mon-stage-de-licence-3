@@ -21,6 +21,31 @@ en programmation, avec un guide d'utilisation fourni.
 
 **Bibliothèque de code** : Python, tkinter, scipy (Delaunay, cKDTree), matplotlib, plotly
 
+### Installation et Utilisation
+
+## >> 1- Télécharger d'abord Python version 3.14.5 : Python 3.14.5 
+
+## >> 2- Installer les packages requis via le fichier ‘requirements.txt’ 
+Pour installer les packages, se mettre dans le bon dossier dans le terminal windows(‘touche Win +R’ puis cmd ou bien taper directement ‘terminal’ dans la barre de 
+recherche du pc), puis une fois dans le terminal taper la commande : pip install -r requirements.txt . 
+
+## >> 3- LANCER LE LOGICIEL 
+Une fois que Python et les packages sont installés, double cliquer sur le fichier *'analyse_colocalisation_STORM.py'*. Cela ouvre directement le logiciel dans un nouvel onglet.  
+
+## >> 4- COMMENT L'UTILISER ?
+Le logiciel présente deux modes d'entrée de fichiers : le mode CSV et le mode TIF 
+	- Le mode CSV (celui qui nous intéresse plus ici) : vous entrez vos fichiers CSV (le W1 en premier puis le W2 par la suite) ;
+	- Le mode TIF : une seule image bicolore (à double marquage) est demandée. 
+Cliquez ensuite sur le bouton « Lancer l’analyse » 
+
+## >> 5- ET ALORS QU’EST-CE QUI SE PASSE PAR LA SUITE ? 
+Après avoir lancé l’analyse attendez quelques secondes. 
+Dès que vous voyez en bas « Terminé ! Ouvre les TIF dans Image J et le html dans le navigateur », allez dans le dossier dans lequel vous avez pris vos CSV, vous verrez trois fichiers :
+	- Le premier : image TIF de référence qui présente le double marquage. C’est l’image de base générée à partir des fichiers CSV.
+	- Le deuxième : image TIF qui présente la colocalisation à partir de la triangulation de Delaunay.
+	- Le troisième : le graphe interactif qui présente l’évolution du score de colocalisation en fonction des paramètres configurés au lancement de l'analyse.
+
+
 ## Projet 2 — Image Art
 
 Application web locale permettant d'appliquer des effets artistiques (vitrail et mosaïque) à des images de microscopie, développée dans le cadre de mon stage de licence 3 à la plateforme **ImageUP** (Université de Poitiers), pour un projet artistique (Arts et Sciences).
