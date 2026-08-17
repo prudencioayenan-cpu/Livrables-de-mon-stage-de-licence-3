@@ -26,24 +26,23 @@ en programmation, avec un guide d'utilisation fourni.
 ## >> 1- Télécharger d'abord Python version 3.14.5 : Python 3.14.5 
 
 ## >> 2- Installer les packages requis via le fichier ‘requirements.txt’ 
-Pour installer les packages, se mettre dans le bon dossier dans le terminal windows(‘touche Win +R’ puis cmd ou bien taper directement ‘terminal’ dans la barre de 
-recherche du pc), puis une fois dans le terminal taper la commande : pip install -r requirements.txt . 
+	Pour installer les packages, se mettre dans le bon dossier dans le terminal windows(‘touche Win +R’ puis cmd ou bien taper directement ‘terminal’ dans la 		barre de recherche du pc), puis une fois dans le terminal taper la commande : pip install *-r requirements.txt* . 
 
 ## >> 3- LANCER LE LOGICIEL 
 Une fois que Python et les packages sont installés, double cliquer sur le fichier *'analyse_colocalisation_STORM.py'*. Cela ouvre directement le logiciel dans un nouvel onglet.  
 
 ## >> 4- COMMENT L'UTILISER ?
 Le logiciel présente deux modes d'entrée de fichiers : le mode CSV et le mode TIF 
-	- Le mode CSV (celui qui nous intéresse plus ici) : vous entrez vos fichiers CSV (le W1 en premier puis le W2 par la suite) ;
+	- Le mode CSV (celui qui nous intéresse plus ici, puisqu'étant le plus fiable) : vous entrez vos fichiers CSV (le W1 en premier puis le W2 par la suite) ;
 	- Le mode TIF : une seule image bicolore (à double marquage) est demandée. 
-Cliquez ensuite sur le bouton « Lancer l’analyse » 
+Cliquez ensuite sur le bouton « Lancer l’analyse ».
 
 ## >> 5- ET ALORS QU’EST-CE QUI SE PASSE PAR LA SUITE ? 
-Après avoir lancé l’analyse attendez quelques secondes. 
-Dès que vous voyez en bas « Terminé ! Ouvre les TIF dans Image J et le html dans le navigateur », allez dans le dossier dans lequel vous avez pris vos CSV, vous verrez trois fichiers :
+Après avoir lancé l’analyse attendez quelques secondes. Dès que vous voyez en bas « Terminé ! Ouvre les TIF dans Image J et le html dans le navigateur », allez dans le dossier dans lequel vous avez pris vos CSV, vous verrez trois fichiers :
+
 	- Le premier : image TIF de référence qui présente le double marquage. C’est l’image de base générée à partir des fichiers CSV.
 	- Le deuxième : image TIF qui présente la colocalisation à partir de la triangulation de Delaunay.
-	- Le troisième : le graphe interactif qui présente l’évolution du score de colocalisation en fonction des paramètres configurés au lancement de l'analyse.
+	- Le troisième : graphe qui présente l’évolution du score de colocalisation en fonction des paramètres configurés au lancement de l'analyse.
 
 
 ## Projet 2 — Image Art
@@ -102,7 +101,7 @@ L'application a initialement été conçue pour piloter Fiji en ligne de command
 ## >> 1- Télécharger d'abord Python version 3.14.5 : Python 3.14.5
 
 ## 2- Installer les packages requis via le fichier ‘requirements.txt’
-	Pour installer les packages, se mettre dans le bon dossier dans le terminal windows(‘touche Win +R’ puis cmd ou bien taper directement ‘terminal’ dans la barre de recherche du pc), puis une fois dans le terminal taper la commande : pip install -r requirements.txt .
+	Pour installer les packages, se mettre dans le bon dossier dans le terminal windows(‘touche Win +R’ puis cmd ou bien taper directement ‘terminal’ dans la 		barre de recherche du pc), puis une fois dans le terminal taper la commande : pip install *-r requirements.txt*.
 
 ## >> 3- Lancer l'appli
 Une fois que Python et les packages sont installés, double cliquer sur le fichier ‘lancer_ImageArt’, qui est un .bat. Cela ouvre directement le serveur Flask et lance l'application dans le navigateur. Le serveur Flask s’ouvre d’abord via un terminal (puisque c’est lui qui fait tourner l’application, puis l’application elle s’ouvre par la suite quelques secondes d’attente après. 
@@ -113,11 +112,11 @@ Une fois que Python et les packages sont installés, double cliquer sur le fichi
 Pas de panique ce n’est pas du tout riqué… C’est juste une formalité.
 Vous verrez s'afficher l'interface de l'application.
 Allez, c'est parti !
-Bonne analyse vitrail ou mosaique ou vitrail à vous.
+Bonne analyse vitrail ou mosaique à vous.
 
 Pour ajouter ou retirer des images de la galerie, il suffit d'ajouter ou de supprimer les fichiers correspondants dans le dossier `images/`.
 
 ### Auteur
 
-Prudencio AYENAN — stagiaire en Bio-Informatique, à la plateforme ImageUP, Université de Poitiers, Mai-Juillet 2026
+Prudencio AYENAN — stagiaire L3 en Bio-Informatique, à la plateforme ImageUP, Université de Poitiers, Mai-Juillet 2026
 
