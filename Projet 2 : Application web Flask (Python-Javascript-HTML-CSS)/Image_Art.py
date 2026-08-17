@@ -83,7 +83,7 @@ def vitrail_v1_mael(img_pil, radius, num_colors, lead_thick):
 
 # ── VERSION 3 : Cléo Thury ───────────────────────────────────────────────────
 # Find Maxima + couleur moyenne + boost saturation HSV + choix teinte
-def vitrail_v3_cleo(img_pil, sensibilite, precision, intensite, teinte):
+def vitrail_v2_cleo(img_pil, sensibilite, precision, intensite, teinte):
     arr = np.array(img_pil, dtype=np.uint8)
     # Style teinte
     if teinte == "Niveaux de gris":
@@ -196,17 +196,26 @@ def upload():
     return jsonify({"ok": True, "nom": nom_unique, "nom_original": fichier.filename})
 
 
-@app.route("/lancer", methods=["POST"])
+@app.route("/lancer", methods=["POST"]) #la demande envoyée par le navigateur quad on clique sur lancer, c'est une requête
 def lancer():
-    data       = request.json
-    image_name = data.get("image")
-    programme  = data.get("programme")
-    params     = data.get("params", {})
-    est_upload = data.get("estUpload", False)
+    data       = request.json #json dit : "la requête envoyée est sous format json, transforme la moi en une biblio python"
+    #Cette boite data avec les 4 étiquettes ci-dessous est crée par Javascript et envoyée au serveur Flask sous forme de texte JSON,
+    image_name = data.get("image") #on récupère le nom de l'image sélectionnée
+    programme  = data.get("programme")  #ensuite le nom du programme sélectionné
+    params     = data.get("params", {}) #ensuite les paramètres. {} à la fin veut dire : "si jamais cette boite de param n'existe pas, utilise une boîte vide plutôt que de planter.
+    est_upload = data.get("estUpload", False) #True si l'image est nouvelle et false si c'est une image qui existe déjà
 
     # Cherche l'image dans le bon dossier selon son origine
-    dossier_source = UPLOADS_TEMP_DIR if est_upload else IMAGES_DIR
-    image_path = os.path.join(dossier_source, image_name)
+    dossier_source = UPLOADS_TEMP_DIR if est_upload else IMAGES_DIR  #si est_upload est vrai, on cherche dans le fichier des images temporaires ou téléversées,
+    #sinon on cherche dans le dossier des iamges normales
+    #C'est léquivalent de :
+        #if est_upload:
+            #dossier_source = UPLOADS_TEMP_DIR
+        #else:
+            #dossier_source = IMAGES_DIR
+ 
+
+    image_path = os.path.join(dossier_source, image_name)  #construit le chemin complet vers le fichier, par exemple images/image2.tif
     if not os.path.isfile(image_path):
         return jsonify({"ok": False, "erreur": "Image introuvable."})
 
@@ -225,8 +234,8 @@ def lancer():
                 int(params.get("numColors", 12)),
                 int(params.get("leadThick", 2)))
 
-        elif programme == "vitrail_v3":
-            resultat = vitrail_v3_cleo(img,
+        elif programme == "vitrail_v2":
+            resultat = vitrail_v2_cleo(img,
                 int(params.get("sensibilite", 50)),
                 int(params.get("precision", 3)),
                 float(params.get("intensite", 1.0)),
